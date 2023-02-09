@@ -3,6 +3,10 @@ import MerchGallery from "./MerchGallery";
 // import { v4 } from 'uuid';
 import merchandiseList from "./merchandiseList";
 import MerchDetail from "./MerchDetail";
+import Footer from "./Footer";
+import Admin from "./Admin";
+// import PropTypes from "prop-types";
+
 
 class MerchControl extends React.Component {
 
@@ -10,54 +14,75 @@ class MerchControl extends React.Component {
     super(props);
     this.state = {
       showDetails: false,
-      tileDisplay: 0,
-      inventory: merchandiseList 
+      displayItem: null,
+      inventory: merchandiseList,
+      showAdmin: false
     };
   }
 
   handleHomeClick = () => {
     this.setState({
-      showDetails: false
+      showDetails: false,
+      showAdmin: false
     })
   }
 
   handleTileClick = (id) => {
     this.setState({
-      tileDisplay: parseInt(id),
-      showDetails: true
+      displayItem: this.state.inventory.filter(item=> item.id === id)[0],
+      showDetails: true,
+      showAdmin: false
     })
   }
 
-  handleBuyController = (quantity) => {
-    let object = this.state.inventory[this.state.tileDisplay]
-    if (object["quantity"] >= quantity) {
-      object["quantity"] -= quantity; 
-    }    
-    let newInventory = this.state.inventory
-    newInventory[this.state.tileDisplay] = object;
-    this.setState({ inventory: newInventory })
+  handleAdminClick = () => {
+    this.setState({
+      showDetails: false,
+      showAdmin: true
+    })
   }
 
-  handleRestockController = (quantity) => {
-    let object = this.state.inventory[this.state.tileDisplay]
-    object["quantity"] += quantity;        
-    let newInventory = this.state.inventory
-    newInventory[this.state.tileDisplay] = object;
-    this.setState({ inventory: newInventory })
+  handleBuyClick = (quantity, id) => {
+    let item = this.state.inventory.filter(item=> item.id === id)[0];
+    if (item["quantity"] >= quantity) {
+      item["quantity"] -= quantity; 
+    }    
+    let newInventory = this.state.inventory.filter(item=>item.id !== id).concat(item);
+    this.setState({ 
+      inventory: newInventory,
+      displayItem: item
+     })
+  }
+
+  handleRestockClick = (quantity, id) => {
+    let item = this.state.inventory.filter(item => item.id === id)[0];
+    item["quantity"] += quantity;        
+    let newInventory = this.state.inventory.filter(item => item.id !== id).concat(item);
+    this.setState({ 
+      inventory: newInventory,
+      displayItem: item
+    })
   }
 
   render(){
     let currentView = [];
     if (this.state.showDetails){
-      currentView = < MerchDetail handleRestockController={this.handleRestockController} handleBuyController={this.handleBuyController} onHomeClick={this.handleHomeClick} id={this.state.tileDisplay} inventory={this.state.inventory}/>
-    } else {
-      currentView = <MerchGallery onTileClick={this.handleTileClick} inventory={this.state.inventory} />
+      currentView = < MerchDetail onRestockClick={this.handleRestockClick} onBuyClick={this.handleBuyClick} onHomeClick={this.handleHomeClick} item={this.state.displayItem}/>
+    } else if(this.state.showAdmin) {
+      currentView = <Admin handleHomeClick={this.handleHomeClick}/>
+    }
+    else {
+      currentView = 
+      <div>
+        <MerchGallery onTileClick={this.handleTileClick} inventory={this.state.inventory} />
+        <Footer handleAdminClick={this.handleAdminClick}/>
+      </div>
     }    
 
     return (
       // <MerchGallery inventory={this.state.inventory} />
       <div>
-        {currentView}
+        {currentView}        
       </div>
     ) 
   }

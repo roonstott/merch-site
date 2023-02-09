@@ -1,7 +1,5 @@
 import React from "react";
 import MerchTile from "./MerchTile";
-import { v4 } from 'uuid';
-
 
 function MerchGallery ({inventory, onTileClick}) {
 
@@ -11,14 +9,15 @@ function MerchGallery ({inventory, onTileClick}) {
 
   return (
     <div>
-      {inventory.map((merch, index) => {
+      {inventory.map((merch) => {
         return (
-          <div onClick={() => TileClick(index)}>
+          <div onClick={() => TileClick(merch.id)} key={merch.id}>
             <MerchTile  name={merch.name}
-                                quantity={merch.quantity}
-                                description={merch.description}
-                                price={merch.price}
-                                key={v4()}/>
+                        quantity={merch.quantity}
+                        description={merch.description}
+                        price={merch.price}
+                        id={merch.id}
+                        key={merch.id}/>
           </div>
           )
         })

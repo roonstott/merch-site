@@ -1,12 +1,12 @@
 import React from "react";
 
 
-function Restock ({handleRestockDetails}) {
+function Restock ({onClickingRestock, id}) {
 
   function handleRestock(event) {
     event.preventDefault();
     const qty = parseInt(event.target.quantity.value)
-    handleRestockDetails(qty);
+    onClickingRestock(qty, id);
   }
 
   return (

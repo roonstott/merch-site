@@ -3,28 +3,17 @@ import Buy from './Buy';
 import Restock from './Restock';
 
 function MerchDetail(props) {
-  function GoHome() {
-    props.onHomeClick();
-  }
-
-  function handleBuyDetails (quantity)  {
-    props.handleBuyController(quantity);
-  }
-
-  function handleRestockDetails (quantity)  {
-    props.handleRestockController(quantity);
-  }
-
-  const item = props.inventory[props.id]
+  
+  const item = props.item;
   return (
     <div>
-      <button onClick={() => GoHome()}>Go Back</button>
+      <button onClick={() => props.onHomeClick()}>Go Back</button>
       <h1>{item.name}</h1>
       <p>Description: {item.description}</p>
       <p>Price: {item.price}</p>
       <p>Quantity: {item.quantity}</p>
-      <Buy handleBuyDetails={handleBuyDetails} />
-      <Restock handleRestockDetails={handleRestockDetails} />
+      <Buy onClickingBuy={props.onBuyClick} id={item.id} />
+      <Restock onClickingRestock={props.onRestockClick} id={item.id} />
     </div>
   )
 }

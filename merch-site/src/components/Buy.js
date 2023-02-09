@@ -1,12 +1,12 @@
 import React from "react";
 
 
-function Buy ({handleBuyDetails}) {
+function Buy ({onClickingBuy, id}) {
 
   function handleBuy(event) {
     event.preventDefault();
     const qty = parseInt(event.target.quantity.value)
-    handleBuyDetails(qty);
+    onClickingBuy(qty, id);
   }
 
   return(
